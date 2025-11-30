@@ -6,8 +6,8 @@ class TreeNode:
     def __init__(self, nodeOrder: int):
         self.nodeOrder = nodeOrder
         self.isLeaf = False
-        self.childNodes = []
-        self.parent = None
+        self.indexKeys = []
+        self.parentNode = None
 
     def setOrder(self, nodeOrder):
         self.nodeOrder = nodeOrder
@@ -17,8 +17,8 @@ class TreeNode:
     def setIsLeafFalse(self):
         self.isLeaf = False
 
-    def addChildNode(self, childNode):
-        self.childNodes.append(childNode)
+    def addIndexKey(self, keyValue):
+        self.indexKeys.append(keyValue)
 
     def setParentNode(self, parentNode):
         self.parent = parentNode
