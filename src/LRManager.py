@@ -13,6 +13,7 @@ class LRManager:
         self.indexColumn = int(indexColumn)
         self.keyList = [] # LIST STORING ALL INDEXES
         self.models = [] # LIST STORING ALL L.R. MODELS
+        self.model = None # LIST STORING ALL L.R. MODELS
 
     # PROCESSES THE CSV INPUT FILE FOR THE COLUMN WITH THE KEYS
     def processInputFile(self):
@@ -52,26 +53,27 @@ class LRManager:
 
         for keyEntry in self.keyList:
             print(keyEntry)
-
-    # GETS THE DATA OF A SINGLE COUNTRY BY COUNTRY CODE
-    def getCountryData(self, countryCode: str):
-        returnValue = self.dataByCountry.get(countryCode, [])
-        return returnValue
     
     # CREATE MODELS FOR ALL COUNTRIES
-    def initAllModels(self):
-        for countryCode, countryData in self.dataByCountry.items():
-            countryModel = LearnedIndexLR(countryCode, countryData)
-            countryModel.trainModel()
-            countryModel.calculateErrorRanges()
-            self.models[countryCode] = countryModel
+    # def initAllModels(self):
+    #     for countryCode, countryData in self.dataByCountry.items():
+    #         countryModel = LearnedIndexLR(countryCode, countryData)
+    #         countryModel.trainModel()
+    #         countryModel.calculateErrorRanges()
+    #         self.models[countryCode] = countryModel
 
-        print("[FROM LRManager.py] ALL MODELS INITIALISED") # TESTING
+    #     print("[FROM LRManager.py] ALL MODELS INITIALISED") # TESTING
 
-    # GETS THE MODEL FOR A COUNTRY BY ITS COUNTRY CODE
-    def getModel(self, countryCode: str):
-        print(self.models.get(countryCode))
-        return self.models.get(countryCode)
+    # CREATE AND TRAIN MODEL FROM OUR KEY LIST
+    def initModel(self):
+        keyModel = LearnedIndexLR(self.keyList)
+        keyModel.trainModel()
+        keyModel.calculateErrorRanges()
+        self.model = keyModel
+
+    # RETURN THE MODEL OBJECT
+    def getModel(self):
+        return self.model
         
 
 # MAIN
