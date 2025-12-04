@@ -3,6 +3,8 @@
 # https://www.geeksforgeeks.org/machine-learning/ml-linear-regression/
 # https://www.w3schools.com/python/python_ml_linear_regression.asp
 
+import math
+
 class LearnedIndexLR:
     def __init__(self, indexList: list):
         self.indexList = indexList # CONSIDER SORTING IN ASC. ORDER
@@ -79,5 +81,28 @@ class LearnedIndexLR:
         print("MAX POSITIVE ERROR: " + str(self.maxPositiveError))
         print("MAX NEGATIVE ERROR: " + str(self.maxNegativeError))
 
+    # CALCULATES THE EXACT RANGES, THEN PERFORMS BINARY SEARCH
+    def getIndexPosition(self, key):
+        # GET THE PREDICTION
+        prediction = self.predict(key)
 
+        # COMPUTE POSSIBLE RANGE
+        left = prediction + self.maxNegativeError
+        right = prediction + self.maxPositiveError
 
+        # ROUND MAX UPWARDS, ROUND MIN DOWNWARDS
+        left = math.floor(left)
+        right = math.ceil(right)
+
+        # NOW DO BINARY SEARCH
+        while left <= right:
+            middle = (left + right) // 2
+            if self.indexList[middle] == key:
+                return middle
+            elif self.indexList[middle] < key:
+                left = middle + 1
+            else:
+                right = middle - 1
+
+        # IF THIS IS REACHED, THEN INDEX WAS NOT FOUND
+        return None
