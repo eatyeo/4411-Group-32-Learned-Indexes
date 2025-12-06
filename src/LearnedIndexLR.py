@@ -89,7 +89,7 @@ class LearnedIndexLR:
         # COMPUTE POSSIBLE RANGE
         # ADDED MIN/MAX TO ENSURE CORRECT BOUNDS
         left = max(0, prediction + self.maxNegativeError)
-        right = min(prediction + self.maxPositiveError, len(self.indexPositions))
+        right = min(prediction + self.maxPositiveError, len(self.indexPositions) - 1)
 
         # ROUND MAX UPWARDS, ROUND MIN DOWNWARDS
         left = math.floor(left)
@@ -114,6 +114,41 @@ class LearnedIndexLR:
         prediction = self.predict(key)
 
         # COMPUTE POSSIBLE RANGE
+        left = max(0, prediction + self.maxNegativeError)
+        right = min(prediction + self.maxPositiveError, len(self.indexPositions) - 1)
+
+        # ROUND MAX UPWARDS, ROUND MIN DOWNWARDS
+        left = math.floor(left)
+        right = math.ceil(right)
+
+        # DO BINARY SEARCH, WHILE CHECKING EACH TIME WE MOVE LEFT/RIGHT
+        # THIS SAME MODIFIED BINARY SEARCH WILL BE USED IN REMOVE
+        keyFound = False
+        while left <= right:
+            middle = (left + right) // 2
+            if self.indexList[middle] == key:
+                keyFound = True
+                break
+            elif self.indexList[middle] < key:
+                left = middle + 1
+            else:
+                right = middle - 1
+
+        if keyFound:
+            return None
+        else:
+            # KEY HAS BEEN FOUND
+            # print("INDEX INSERTION POSITION: " + str(left))
+            self.indexList.insert(left, key)
+            # APPEND +1 TO indexPositions
+            self.indexPositions.append(len(self.indexPositions))
+
+    # REMOVES THE GIVEN KEY FROM THE INDEX (IF POSSIBLE)
+    def removeIndex(self, key):
+                # GET THE PREDICTION 
+        prediction = self.predict(key)
+
+        # COMPUTE POSSIBLE RANGE
         left = prediction + self.maxNegativeError
         right = prediction + self.maxPositiveError
 
@@ -121,5 +156,24 @@ class LearnedIndexLR:
         left = math.floor(left)
         right = math.ceil(right)
 
-        # DO BINARY SEARCH, WHILE CHECKING EACH TIME WE MOVE LEFT/RIGHT
-        # IF GIVEN KEY IS FOUND, DO NOTHING
+        # USE MODIFIED BINARY SEARCH TO DELETE THE GIVEN INDEX
+        # IF GIVEN KEY IS FOUND, THEN DELETE, IF NOT FOUND, THEN DO NOTHING
+        keyFound = None
+        while left <= right:
+            middle = (left + right) // 2
+            if self.indexList[middle] == key:
+                keyFound = True
+                break
+            elif self.indexList[middle] < key:
+                left = middle + 1
+            else:
+                right = middle - 1
+
+        if keyFound:
+            print("INDEX DELETION POSITION: " + str(middle))
+            self.indexList.pop(middle)
+            # REMOVE LAST ELEM FROM indexPositions
+            self.indexPositions.pop()
+        else:
+            # KEY WAS NOT FOUND
+            return None

@@ -5,7 +5,7 @@ import time
 from LRManager import LRManager
 
 def main():
-    # WILL BE CHANGED TO GET FROM COMMAND LINE
+    # GET PARAMS FROM COMMAND LINE
     indexMethod = sys.argv[1]
     filepath = sys.argv[2]
     indexColumn = int(sys.argv[3])
