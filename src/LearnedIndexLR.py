@@ -108,6 +108,9 @@ class LearnedIndexLR:
         # IF THIS IS REACHED, THEN INDEX WAS NOT FOUND
         return None
 
+    # REMEMBER THAT MODEL NEEDS TO BE ADJUSTED AFTER CHANGES
+    # AS SUCH, self.trainModel() IS CALLED AT THE END OF THE FOLLOWING
+
     # ADDS THE GIVEN KEY TO THE INDEX LIST
     def addIndex(self, key):
         # GET THE PREDICTION 
@@ -143,6 +146,9 @@ class LearnedIndexLR:
             # APPEND +1 TO indexPositions
             self.indexPositions.append(len(self.indexPositions))
 
+        # READJUST MODEL PARAMETERS
+        self.trainModel()
+
     # REMOVES THE GIVEN KEY FROM THE INDEX (IF POSSIBLE)
     def removeIndex(self, key):
                 # GET THE PREDICTION 
@@ -170,10 +176,13 @@ class LearnedIndexLR:
                 right = middle - 1
 
         if keyFound:
-            print("INDEX DELETION POSITION: " + str(middle))
+            # print("INDEX DELETION POSITION: " + str(middle))
             self.indexList.pop(middle)
             # REMOVE LAST ELEM FROM indexPositions
             self.indexPositions.pop()
         else:
             # KEY WAS NOT FOUND
             return None
+        
+        # READJUST MODEL PARAMETERS
+        self.trainModel()

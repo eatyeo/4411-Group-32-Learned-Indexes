@@ -12,6 +12,7 @@ def main():
 
     print("\nTIMING MODULE START")
 
+    # LINEAR REGRESSION
     if indexMethod == "LR":
         # CREATE MANAGER (NO NEED TO BE TIMED)
         manager = LRManager(filepath, indexColumn)
@@ -45,13 +46,30 @@ def main():
         # print("TIME TO LOOKUP KEY VALUE 1188: " + str(resultingTime) + " SECONDS.")
         print("TIME TO LOOKUP KEY VALUE 1188: " + str(resultingTime * 1000) + " ms.")
 
-        # REMOVE A KNOWN KEY VALUE (1188)
+        # REMOVE A KNOWN KEY VALUE (1188), THEN READJUST MODEL
+        timeStart = time.time()
+        model.removeIndex(1188)
+        timeEnd = time.time()
+        resultingTime = timeEnd - timeStart
+        # print("TIME TO LOOKUP KEY VALUE 1188: " + str(resultingTime) + " SECONDS.")
+        print("TIME TO REMOVE KEY VALUE 1188: " + str(resultingTime * 1000) + " ms.")
 
-        # ADD BACK A KEY VALUE KNOWN TO NOT EXIST (1188)
+        # ADD BACK A KEY VALUE KNOWN TO NOT EXIST (1188), THEN READJUST MODEL
+        timeStart = time.time()
+        model.addIndex(1188)
+        timeEnd = time.time()
+        resultingTime = timeEnd - timeStart
+        # print("TIME TO LOOKUP KEY VALUE 1188: " + str(resultingTime) + " SECONDS.")
+        print("TIME TO INSERT KEY VALUE 1188: " + str(resultingTime * 1000) + " ms.")
+        
+        print("\n")
+    # B+ TREE
     elif indexMethod == "BT":
         pass
+    # HASH INDEX
     elif indexMethod == "HI":
         pass
+    # NEURAL NETWORK
     elif indexMethod == "NN":
         pass
     else:
