@@ -3,6 +3,7 @@
 import sys
 import time 
 from LRManager import LRManager
+from HashIndex import HashIndex
 
 def main():
     # GET PARAMS FROM COMMAND LINE
@@ -68,7 +69,40 @@ def main():
         pass
     # HASH INDEX
     elif indexMethod == "HI":
-        pass
+        manager = LRManager(filepath, indexColumn)
+        
+        # READS AND SORTS DATA (TIMED)
+        timeStart = time.time()
+        manager.processInputFile()
+        timeEnd = time.time()
+        print("PROCESS INPUT TIME: " + str((timeEnd - timeStart) * 1000) + " ms.")
+
+        # CREATE AND POPULATE THE HASH INDEX
+        timeStart = time.time()
+        hash_idx = HashIndex()
+        hash_idx.buildIndex(manager.keyList)
+        timeEnd = time.time()
+        print("BUILD INDEX TIME: " + str((timeEnd - timeStart) * 1000) + " ms.")
+
+        # LOOKUP A KNOWN KEY VALUE (2000)
+        timeStart = time.time()
+        positions = hash_idx.getIndexPosition(2000) 
+        timeEnd = time.time()
+        print("TIME TO LOOKUP KEY 2000: " + str((timeEnd - timeStart) * 1000) + " ms.")
+        
+        # VERIFY SEARCH RESULTS
+        if positions:
+            print(f"   > Found matches at indices: {positions[:5]}...")
+        else:
+            print("   > Key not found.")
+        
+        # REMOVE THE KEY (2000) FROM THE INDEX
+        timeStart = time.time()
+        hash_idx.removeIndex(2000)
+        timeEnd = time.time()
+        print("TIME TO REMOVE KEY 2000: " + str((timeEnd - timeStart) * 1000) + " ms.")
+
+        print("\n")
     # NEURAL NETWORK
     elif indexMethod == "NN":
         pass
