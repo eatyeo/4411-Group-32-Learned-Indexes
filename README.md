@@ -29,8 +29,11 @@ For example, this file can be run with the following command:
 python3 TimingModule.py indexMethod filepath indexColumn
 ```
 Where indexMethod is one of ["LR", "HI", "BT"] for Linear Regression, Hash Index, or B+ Tree.
+
 Where filepath is the relative filepath.
+
 Where indexColumn corresponds to the column of the input file that will be used (for synthetic datasets, this will be 0).
+
 Again, note that depending on the input file that is used, the hardcoded values used for testing may not work, and may need to be adjusted to a value that is known to be in the dataset.
 
 ### LRManager.py
