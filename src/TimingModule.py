@@ -4,6 +4,7 @@ import sys
 import time 
 from LRManager import LRManager
 from HashIndex import HashIndex
+from BPlusTree import BPlusTree
 from pympler import asizeof
 
 def timeLR(filepath, indexColumn): 
@@ -121,6 +122,63 @@ def timeHI(filepath, indexColumn):
 
     return [resultingTime1, resultingTime2, resultingTime3, resultingTime4]
 
+def timeBT(filepath, indexColumn):
+    manager = LRManager(filepath, indexColumn)
+    
+    # READS AND SORTS DATA (TIMED)
+    timeStart = time.time()
+    manager.processInputFile()
+    timeEnd = time.time()
+    print("PROCESS INPUT TIME: " + str((timeEnd - timeStart) * 1000) + " ms.")
+    
+    # CREATE AND BUILD THE B+ TREE INDEX
+    timeStart = time.time()
+    bt = BPlusTree()
+    bt.buildIndex(manager.keyList)
+    timeEnd = time.time()
+    print("BUILD B+ TREE TIME: " + str((timeEnd - timeStart) * 1000) + " ms.")
+
+    # LOOKUP A KNOWN KEY VALUE (1188)
+    timeStart = time.time()
+    positions = bt.getIndexPosition(1188)
+    timeEnd = time.time()
+    resultingTime1 = timeEnd - timeStart
+    print("TIME TO LOOKUP KEY 1188: " + str(resultingTime1 * 1000) + " ms.")
+
+    # REMOVE THE KEY (1188) FROM THE INDEX
+    timeStart = time.time()
+    bt.removeIndex(1188)
+    timeEnd = time.time()
+    resultingTime2 = timeEnd - timeStart
+    print("TIME TO REMOVE KEY 1188: " + str(resultingTime2 * 1000) + " ms.")
+
+    # ADD BACK A KEY VALUE KNOWN TO EXISTED BEFORE (1188)
+    # Use the first position we had earlier
+    if positions:
+        timeStart = time.time()
+        bt.addIndex(1188, positions[0])
+        timeEnd = time.time()
+        resultingTime3 = timeEnd - timeStart
+        print("TIME TO INSERT KEY 1188: " + str(resultingTime3 * 1000) + " ms.")
+    else:
+        resultingTime3 = 0.0
+        print("SKIPPED INSERT TIMING (1188 not found originally).")
+
+    # PERFORM A RANGE QUERY TO COMPARE WITH LR / HI
+    timeStart = time.time()
+    bt.getRange(500, 1000)
+    timeEnd = time.time()
+    resultingTime4 = timeEnd - timeStart
+    print("TIME TO GET RANGE 500 - 1000: " + str(resultingTime4 * 1000) + " ms.")
+
+    print("\n")
+
+    btSize = asizeof.asizeof(bt)
+    print("BT SPACE COMPLEXITY: MODEL USES:", btSize, "bytes.")
+
+    # Return lookup, remove, insert, range times
+    return [resultingTime1, resultingTime2, resultingTime3, resultingTime4]
+
 def main():
     # GET PARAMS FROM COMMAND LINE
     indexMethod = sys.argv[1]
@@ -158,7 +216,32 @@ def main():
         print("\n")
     # B+ TREE
     elif indexMethod == "BT":
-        pass
+        counter = 0
+        iterations = 100   # change to 10 / 100 / 500 when you want different averages
+        totalLookup = 0
+        totalRemove = 0
+        totalInsert = 0
+        totalRange = 0
+
+        while counter < iterations:
+            result = timeBT(filepath, indexColumn)
+            totalLookup += result[0]
+            totalRemove += result[1]
+            totalInsert += result[2]
+            totalRange += result[3]
+            counter += 1
+
+        avgLookup = totalLookup / iterations
+        avgRemove = totalRemove / iterations
+        avgInsert = totalInsert / iterations
+        avgRange = totalRange / iterations
+
+        print("AVG. BT LOOKUP OVER " + str(iterations) + ": " + str(avgLookup * 1000) + " ms.")
+        print("AVG. BT REMOVE OVER " + str(iterations) + ": " + str(avgRemove * 1000) + " ms.")
+        print("AVG. BT INSERT OVER " + str(iterations) + ": " + str(avgInsert * 1000) + " ms.")
+        print("AVG. BT RANGE OVER " + str(iterations) + ": " + str(avgRange * 1000) + " ms.")
+        print("\n")
+
     # HASH INDEX
     elif indexMethod == "HI":
         counter = 0
@@ -186,6 +269,7 @@ def main():
         print("AVG. HI INSERT OVER " + str(iterations) + ": " + str(avgInsert * 1000) + " ms.")
         print("AVG. HI RANGE OVER " + str(iterations) + ": " + str(avgRange * 1000) + " ms.")
         print("\n")
+        
     # NEURAL NETWORK
     elif indexMethod == "NN":
         pass
