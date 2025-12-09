@@ -16,7 +16,6 @@ def timeLR(filepath, indexColumn):
     manager.processInputFile()
     timeEnd = time.time()
     resultingTime = timeEnd - timeStart
-    # print("PROCESS INPUT TIME: " + str(resultingTime) + " SECONDS.")
     print("PROCESS INPUT TIME: " + str(resultingTime * 1000) + " ms.")
 
     # CREATES AND TRAINS MODEL
@@ -24,7 +23,6 @@ def timeLR(filepath, indexColumn):
     manager.initModel()
     timeEnd = time.time()
     resultingTime = timeEnd - timeStart
-    # print("CREATE AND TRAIN MODEL TIME: " + str(resultingTime) + " SECONDS.")
     print("CREATE AND TRAIN MODEL TIME: " + str(resultingTime * 1000) + " ms.")
 
     # GET THE MODEL
@@ -36,7 +34,6 @@ def timeLR(filepath, indexColumn):
     model.getIndexPosition(1188)
     timeEnd = time.time()
     resultingTime1 = timeEnd - timeStart
-    # print("TIME TO LOOKUP KEY VALUE 1188: " + str(resultingTime) + " SECONDS.")
     print("TIME TO LOOKUP KEY VALUE 1188: " + str(resultingTime1 * 1000) + " ms.")
 
     # REMOVE A KNOWN KEY VALUE (1188), THEN READJUST MODEL
@@ -44,7 +41,6 @@ def timeLR(filepath, indexColumn):
     model.removeIndex(1188)
     timeEnd = time.time()
     resultingTime2 = timeEnd - timeStart
-    # print("TIME TO LOOKUP KEY VALUE 1188: " + str(resultingTime) + " SECONDS.")
     print("TIME TO REMOVE KEY VALUE 1188: " + str(resultingTime2 * 1000) + " ms.")
 
     # ADD BACK A KEY VALUE KNOWN TO NOT EXIST (1188), THEN READJUST MODEL
@@ -52,12 +48,11 @@ def timeLR(filepath, indexColumn):
     model.addIndex(1188)
     timeEnd = time.time()
     resultingTime3 = timeEnd - timeStart
-    # print("TIME TO LOOKUP KEY VALUE 1188: " + str(resultingTime) + " SECONDS.")
     print("TIME TO INSERT KEY VALUE 1188: " + str(resultingTime3 * 1000) + " ms.")
     
     # PERFORM A RANGE QUERY TO COMPARE WITH HASH INDEX
     timeStart = time.time()
-    model.getRange(500, 1000) # ONLY FOR ROUGHLY LINEAR
+    model.getRange(500, 1000) # DO NOT USE FOR LOG
     timeEnd = time.time()
     resultingTime4 = timeEnd - timeStart
     print("TIME TO GET RANGE 500 - 1000: " + str(resultingTime4 * 1000) + " ms.")
@@ -114,7 +109,7 @@ def timeHI(filepath, indexColumn):
 
     # PERFORM A RANGE QUERY TO COMPARE WITH HASH INDEX
     timeStart = time.time()
-    hash_idx.getRange(500, 1000) # ONLY FOR ROUGHLY LINEAR
+    hash_idx.getRange(500, 1000) # DO NOT USE FOR LOG
     timeEnd = time.time()
     resultingTime4 = timeEnd - timeStart
     print("TIME TO GET RANGE 500 - 1000: " + str(resultingTime4 * 1000) + " ms.")
@@ -137,7 +132,7 @@ def main():
     # LINEAR REGRESSION
     if indexMethod == "LR":
         counter = 0
-        iterations = 3
+        iterations = 500
         totalLookup = 0
         totalRemove = 0
         totalInsert = 0
