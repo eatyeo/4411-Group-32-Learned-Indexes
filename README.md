@@ -1,5 +1,9 @@
 # 4411-Group-32-Learned-Indexes
 
+## About this README
+This README is written for use on the github repo. If this is being read from the README.md file, refer to the following link for ease of viewing:
+[GitHub Repo](https://github.com/leeandrew135/4411-Group-32-Learned-Indexes)
+
 ## Project Structure
 
 ### /data
