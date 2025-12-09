@@ -180,6 +180,8 @@ def timeBT(filepath, indexColumn):
     return [resultingTime1, resultingTime2, resultingTime3, resultingTime4]
 
 def main():
+    iterations = 10 # REPRESENTS THE NUMBER OF TRIALS THAT ARE AVERAGED
+
     # GET PARAMS FROM COMMAND LINE
     indexMethod = sys.argv[1]
     filepath = sys.argv[2]
@@ -190,7 +192,6 @@ def main():
     # LINEAR REGRESSION
     if indexMethod == "LR":
         counter = 0
-        iterations = 500
         totalLookup = 0
         totalRemove = 0
         totalInsert = 0
@@ -217,7 +218,6 @@ def main():
     # B+ TREE
     elif indexMethod == "BT":
         counter = 0
-        iterations = 100   # change to 10 / 100 / 500 when you want different averages
         totalLookup = 0
         totalRemove = 0
         totalInsert = 0
@@ -239,13 +239,11 @@ def main():
         print("AVG. BT LOOKUP OVER " + str(iterations) + ": " + str(avgLookup * 1000) + " ms.")
         print("AVG. BT REMOVE OVER " + str(iterations) + ": " + str(avgRemove * 1000) + " ms.")
         print("AVG. BT INSERT OVER " + str(iterations) + ": " + str(avgInsert * 1000) + " ms.")
-        print("AVG. BT RANGE OVER " + str(iterations) + ": " + str(avgRange * 1000) + " ms.")
+        print("AVG. BT  RANGE OVER " + str(iterations) + ": " + str(avgRange * 1000) + " ms.")
         print("\n")
-
     # HASH INDEX
     elif indexMethod == "HI":
         counter = 0
-        iterations = 500
         totalLookup = 0
         totalRemove = 0
         totalInsert = 0
