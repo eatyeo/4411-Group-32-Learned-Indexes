@@ -45,7 +45,7 @@ class LRManager:
                 self.keyList.append(floatKeyValue)
 
             # SORT LIST BY ASC AFTER FOR LOOP
-            self.keyList.sort()
+            # self.keyList.sort()
                 
     # OUTPUT dataByCountry TO COMMAND LINE
     # FORMATTED FOR COPY PASTE TO GRAPHING CALCULATOR
@@ -82,7 +82,7 @@ if __name__ == "__main__":
 
     # TESTING THE MANAGER INSTANCE
     manager.processInputFile()
-    # manager.printKeyList()
+    manager.printKeyList()
     manager.initModel()
 
     # TESTING THE MODEL INSTANCE
